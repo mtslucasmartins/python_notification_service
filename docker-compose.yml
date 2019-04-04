@@ -4,8 +4,8 @@ services:
   db:
     image: mongodb:latest
     environment:
-      - MONGO_INITDB_ROOT_USERNAME: ottimizza
-      - MONGO_INITDB_ROOT_PASSWORD: ottimizza
+      - MONGO_INITDB_ROOT_USERNAME: "ottimizza"
+      - MONGO_INITDB_ROOT_PASSWORD: "ottimizza"
     volumes:
       - /Users/nico/Documents/dev/alura/nico-steppat/680-kubernetes/volume_mysql:/var/lib/mysql
     
