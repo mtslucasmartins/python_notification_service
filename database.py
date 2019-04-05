@@ -1,6 +1,7 @@
 from pymongo import MongoClient
 
-client = MongoClient("mongodb://ottimizza:ottimizza@mongodb:27017/")
+client = MongoClient("mongodb://ottimizza:ottimizza@db:27017/")
+client.server_info()
 
 # gets the database object
 db = client.notifications

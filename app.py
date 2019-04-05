@@ -3,6 +3,7 @@ from flask import Flask
 from routes import notification_blueprint
 from settings import HOST, PORT, SECRET
 
+from database import client
 
 application = Flask(__name__)
 application.config['SECRET_KEY'] = SECRET
