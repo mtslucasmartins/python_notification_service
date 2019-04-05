@@ -3,6 +3,8 @@ import json
 import pywebpush as wp
 
 from flask import abort, Blueprint, g, jsonify, render_template, request, Response
+
+from models import Subscription
 from settings import VAPID
 
 notification_blueprint = Blueprint('notification', __name__)
@@ -37,8 +39,13 @@ def subscribe():
     # POST Request
     request_body = request.get_json()
 
-    user_id = request_body.get('userId')
+    username = request_body.get('username')
+    application_id = request_body.get('applicationId')
     subscription_info = request_body.get('subscriptionInfo')
+
+    # saves subscriptions to database
+    subscription = Subscription(username, application_id, subscription_info)
+    subscription = subscription.save()
 
     # generates an id for reference.
     webpush_key = str(uuid.uuid4())
@@ -48,12 +55,15 @@ def subscribe():
 
 @notification_blueprint.route('/api/v1/notifications/unsubscribe', methods=['GET', 'POST'])
 def unsubscribe():
-    return ('{}', 200, {'Content-Type': 'application/json'})
+    return jsonify({'id': ''})
 
 
 @notification_blueprint.route('/api/v1/notifications/push', methods=['POST'])
 def push():
     request_body = request.get_json()
+
+    username = request_body.get('username')
+    application_id = request_body.get('applicationId')
 
     subscription_info = request_body.get('subscriptionInfo')
     notification = {'notification': request_body.get('notification')}
