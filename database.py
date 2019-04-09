@@ -1,24 +1,17 @@
 from pymongo import MongoClient
-
-client = MongoClient("mongodb://ottimizza:ottimizza@db:27017/")
-client.server_info()
-
-# gets the database object
-db = client.notifications
-
-# gets the collection
-subscriptions_collection = db.subscriptions_collection
+from settings import DATABASE_URI
 
 
-def find_subscription(username):
-    return subscriptions_collection.find_one({
-        "username": username
-    })
+class MongoDB:
 
+    def __init__(self, uri, db_name="heroku_n7hbh3s5"):
+        self.__client = MongoClient(uri)
+        self.__db = self.__client[db_name]  # or client.notifications
 
-def save_subscription(username, application_id, subscription_info):
-    return subscriptions_collection.insert_one({
-        "username": username,
-        "application_id": application_id,
-        "subscription_info": subscription_info
-    })
+    def create_collection(self, collection_name="subscriptions_collection"):
+        return self.__db[collection_name]  # or db.subscriptions_collection
+
+    def server_info(self):
+        self.__client.server_info()
+
+db = MongoDB(DATABASE_URI, "heroku_n7hbh3s5")

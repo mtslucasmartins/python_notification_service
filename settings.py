@@ -14,13 +14,13 @@ SECRET = binascii.hexlify(os.urandom(24))
 # *****************************************************************************
 # Database Settings
 # 
-DATABASE_URI = ""
-DATABASE_HOST = "mongodb"
-DATABASE_PORT = 27017
-DATABASE_DATABASE = "notifications"
+DATABASE_HOST = "ds131814.mlab.com"
+DATABASE_PORT = 31814
+DATABASE_DATABASE = "heroku_n7hbh3s5"
 DATABASE_USERNAME = "ottimizza"
-DATABASE_PASSWORD = "ottimizza"
-
+DATABASE_PASSWORD = "ottimizza123"
+DATABASE_URI = f"mongodb://{DATABASE_USERNAME}:{DATABASE_PASSWORD}@ds131814.mlab.com:31814/heroku_n7hbh3s5"
+print(f"DATABASE_URI: {DATABASE_URI}")
 # *****************************************************************************
 # Notifications Settings
 # 
