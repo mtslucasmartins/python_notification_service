@@ -123,9 +123,7 @@ def fcm_subscribe():
     application_id = request_body.get('applicationId')
     registration_id = request_body.get('registrationId')
 
-    server_key = 'AAAASjkIBhE:APA91bGe34jxD7a_Pd08ZsynOXz-6vaIPdAtqZ31atgLfvqXedeAw0r7VYAHtLPwFY8hxyssVRRxGbVAnoitf00VglU2ck5cjjFwE4IZoRs5xNQgKZLPksTKyFpubnI8wsgtJ5hoFNs2'
-    
-    subscription = FCMPushEndpoint(username, application_id, registration_id, server_key)
+    subscription = FCMPushEndpoint(username, application_id, registration_id, None)
     subscription = subscription.save()
 
     if subscription is None:

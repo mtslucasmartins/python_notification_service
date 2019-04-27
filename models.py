@@ -68,10 +68,10 @@ class WebPushEndpoint(db.Model):
 class FCMPushEndpoint(db.Model):
     __tablename__ = 'push_fcm_endpoints'
 
-    username = db.Column(db.String(120), unique=False, nullable=False, primary_key=True)
+    username = db.Column(db.String(), unique=False, nullable=False, primary_key=True)
     application_id = db.Column(db.String(120), unique=False, nullable=False, primary_key=True)
-    registration_id = db.Column(db.String(120), unique=False, nullable=False, primary_key=True)
-    server_key = db.Column(db.String(120), unique=False, nullable=False)
+    registration_id = db.Column(db.String(), unique=False, nullable=False, primary_key=True)
+    server_key = db.Column(db.String(), unique=False, nullable=True)
 
     def __init__(self, username, application_id, registration_id, server_key):
         self.username = username
@@ -91,7 +91,8 @@ class FCMPushEndpoint(db.Model):
         try:
             db.session.add(self)
             db.session.commit()
-        except:
+        except Exception as e:
+            print(e)
             return None
         return self
 
