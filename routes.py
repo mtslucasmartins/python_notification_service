@@ -4,6 +4,7 @@ import uuid
 import pywebpush as wp
 
 from flask import abort, Blueprint, g, jsonify, render_template, request, Response
+from flask_cors import cross_origin
 
 from models import Application, WebPushEndpoint, FCMPushEndpoint
 from settings import VAPID
@@ -18,6 +19,7 @@ notification_blueprint = Blueprint('notification', __name__)
 # Error Handling:
 # *****************************************************************************
 @notification_blueprint.errorhandler(401)
+@cross_origin()
 def error_page_unauthorized(e):
     status = 401
     response = json.dumps({"status": "error", "message": "Unauthorized."})
@@ -26,6 +28,7 @@ def error_page_unauthorized(e):
 
 
 @notification_blueprint.errorhandler(404)
+@cross_origin()
 def error_page_not_found(e):
     status = 404
     response = json.dumps({"status": "error", "message": "Not Found."})
@@ -36,6 +39,7 @@ def error_page_not_found(e):
 # Requests:
 # *****************************************************************************
 @notification_blueprint.route('/api/v1/notifications/web/subscribe', methods=['GET', 'POST'])
+@cross_origin()
 def subscribe():
     if request.method == "GET":
         return jsonify({'publicKey': VAPID.get("PUBLIC_KEY")})
@@ -55,17 +59,20 @@ def subscribe():
 
 
 @notification_blueprint.route('/api/v1/notifications/web/unsubscribe', methods=['GET', 'POST'])
+@cross_origin()
 def unsubscribe():
     return jsonify({'id': ''})
 
 
 @notification_blueprint.route('/api/v1/notifications/web/<username>/subscriptions', methods=['GET', 'POST'])
+@cross_origin()
 def get_subscriptions(username):
     return jsonify(WebPushEndpoint.get_endpoints_by_username(username))
 
 
 
 @notification_blueprint.route('/api/v1/notifications/web/push', methods=['POST'])
+@cross_origin()
 def push():
     request_body = request.get_json()
 
@@ -100,6 +107,7 @@ def push():
     return jsonify(notification)
 
 @notification_blueprint.route('/api/v1/applications/register', methods=['POST'])
+@cross_origin()
 def applications_register():
     request_body = request.get_json()
     application_id = request_body.get('applicationId')
@@ -114,6 +122,7 @@ def applications_register():
     return jsonify(application.json())
 
 @notification_blueprint.route('/api/v1/notifications/fcm/subscribe', methods=['GET', 'POST'])
+@cross_origin()
 def fcm_subscribe():
     if request.method == "GET":
         return jsonify({'publicKey': VAPID.get("PUBLIC_KEY")})
@@ -132,11 +141,13 @@ def fcm_subscribe():
     return jsonify(subscription.json())
 
 @notification_blueprint.route('/api/v1/notifications/fcm/<username>/subscriptions', methods=['GET', 'POST'])
+@cross_origin()
 def fcm_get_subscriptions(username):
     return jsonify(FCMPushEndpoint.get_endpoints_by_username(username))
 
 
 @notification_blueprint.route('/api/v1/notifications/fcm/push', methods=['POST'])
+@cross_origin()
 def fcm_push():
     request_body = request.get_json()
 

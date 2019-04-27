@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_cors import CORS, cross_origin
 
 from database import db
 from routes import notification_blueprint
@@ -6,6 +7,9 @@ from settings import HOST, PORT, SECRET
 
 application = Flask(__name__)
 application.config.from_object('default_settings')
+
+# CORS Filtering
+cors = CORS(app)
 
 # database initialization.
 db.init_app(application)
