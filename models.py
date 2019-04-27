@@ -3,6 +3,8 @@ import json
 from database import db
 
 class Application(db.Model):
+    __tablename__ = 'applications'
+
 
     application_id = db.Column(db.String(120), unique=False, nullable=False, primary_key=True)
     server_key = db.Column(db.String(), unique=False, nullable=False)
