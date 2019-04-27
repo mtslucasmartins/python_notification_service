@@ -9,7 +9,7 @@ application = Flask(__name__)
 application.config.from_object('default_settings')
 
 # CORS Filtering
-cors = CORS(app)
+cors = CORS(application)
 
 # database initialization.
 db.init_app(application)
