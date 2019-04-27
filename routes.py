@@ -158,7 +158,6 @@ def fcm_push():
     
     username = request_body.get('username')
     application_id = request_body.get('applicationId')
-    server_key = request_body.get('serverKey')
     notification = request_body.get('notification')
     
     application = Application.get_application(request_body.get('applicationId'))
