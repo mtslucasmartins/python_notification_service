@@ -155,12 +155,14 @@ def fcm_push():
     # busca endpoints 
     # registration_id = 'ce_413wDclk:APA91bEVE0jpCE3Gqps53iiP4glm_Bk_2GeZvOj-jkt6Ed1kTImQSr1DJnn5KHWWBkSgPz318pCE5vSI5lT-9j-ugpPfQ8WyRCHjrOK33F6u3XVMxdbn4VdjkLhLrUDBrplyJaja22Sr';
     # server_key = 'AAAASjkIBhE:APA91bGe34jxD7a_Pd08ZsynOXz-6vaIPdAtqZ31atgLfvqXedeAw0r7VYAHtLPwFY8hxyssVRRxGbVAnoitf00VglU2ck5cjjFwE4IZoRs5xNQgKZLPksTKyFpubnI8wsgtJ5hoFNs2'
-    
+    print('0')
     username = request_body.get('username')
     application_id = request_body.get('applicationId')
     notification = request_body.get('notification')
     
+    print('1')
     application = Application.get_application(request_body.get('applicationId'))
+    print('2')
 
     for endpoint in FCMPushEndpoint.get_endpoints_by_username_and_application_id(username, application_id):
         data = { 'notification': notification, 'to': endpoint.get('registration_id') }
