@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, send_from_directory
 from flask_cors import CORS, cross_origin
 
 from database import db
@@ -18,9 +18,14 @@ db.init_app(application)
 def create_tables():
     db.create_all()
 
+
+@application.route('/js/<path:path>')
+def send_js(path):
+    return send_from_directory('static', path)
+
+
 # Blueprints
 application.register_blueprint(notification_blueprint)
-
 
 #
 if __name__ == "__main__":
