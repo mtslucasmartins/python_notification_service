@@ -5,6 +5,8 @@ from database import db
 from routes import notification_blueprint
 from settings import HOST, PORT, SECRET
 
+import json
+
 application = Flask(__name__)
 application.config.from_object('default_settings')
 
@@ -29,7 +31,11 @@ def request_permission():
 
 @application.route('/<version>/log', methods = ['POST'])
 def request_permission_error_logs(version):
-    print("Log: " + request.data)
+    try:
+        print("Log: \n" + json.dumps(request.get_json(), indent=4))
+    except Exception as e:
+        print(e)
+
     return {}
 
 
