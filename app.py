@@ -36,7 +36,7 @@ def request_permission_error_logs(version):
     except Exception as e:
         print(e)
 
-    return {}
+    return json.dumps({})
 
 
 # Blueprints
