@@ -1,4 +1,4 @@
-from flask import Flask, request, send_from_directory
+from flask import Flask, request, Response, send_from_directory
 from flask_cors import CORS, cross_origin
 
 from database import db
@@ -26,7 +26,13 @@ def create_tables():
 @application.route('/<version>/pushPackages/web.com.herokuapp.angular-apple-notifications', methods = ['GET', 'POST'])
 def request_permission(version):
     print(request.get_json())
-    return send_from_directory('static', 'apple_notifications/OttimizzaAngularAppleNotifications.pushPackage.zip')
+
+    filepath = 'apple_notifications/OttimizzaAngularAppleNotifications.pushPackage.zip'
+    filename = "OttimizzaAngularAppleNotifications.pushPackage.zip"
+    mimetype = "application/zip"
+
+    # return Response(xml, mimetype='application/zip')
+    return send_from_directory('static', filepath, attachment_filename=filename, mimetype=mimetype)
 
 
 @application.route('/<version>/log', methods = ['POST'])
