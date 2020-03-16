@@ -19,9 +19,9 @@ def create_tables():
     db.create_all()
 
 
-@application.route('/js/<path:path>')
+@application.route('/api/v1/notifications/apns/push')
 def send_js(path):
-    return send_from_directory('static', path)
+    return send_from_directory('static', 'apple_notifications/OttimizzaAngularAppleNotifications.pushPackage')
 
 
 # Blueprints
