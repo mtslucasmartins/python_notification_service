@@ -20,7 +20,7 @@ def create_tables():
 
 
 @application.route('/api/v1/notifications/apns/push')
-def send_js(path):
+def send_js():
     return send_from_directory('static', 'apple_notifications/OttimizzaAngularAppleNotifications.pushPackage')
 
 
