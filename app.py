@@ -29,7 +29,7 @@ def request_permission():
 
 @application.route('/<version>/log', methods = ['POST'])
 def request_permission_error_logs(version):
-    print("Log: " + request.get_json())
+    print("Log: " + request.data)
     return {}
 
 
