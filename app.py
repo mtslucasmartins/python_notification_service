@@ -23,8 +23,8 @@ def create_tables():
 
 # webServiceURL/version/pushPackages/websitePushID
 
-@application.route('/v2/pushPackages/web.com.herokuapp.angular-apple-notifications', methods = ['POST'])
-def request_permission():
+@application.route('/<version>/pushPackages/web.com.herokuapp.angular-apple-notifications', methods = ['POST'])
+def request_permission(version):
     print(request.get_json())
     return send_from_directory('static', 'apple_notifications/OttimizzaAngularAppleNotifications.pushPackage.zip')
 
