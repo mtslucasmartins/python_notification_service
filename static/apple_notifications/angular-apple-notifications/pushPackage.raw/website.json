@@ -6,5 +6,5 @@
     ],
     "urlFormatString": "http://accounts.ottimizza.com.br/%@/?flight=%@",
     "authenticationToken": "19f8d7a6e9fb8a7f6d9330dabe",
-    "webServiceURL": "https://staging-notifications-service.herokuapp.com/api/v1/notifications/apns/push"
+    "webServiceURL": "https://staging-notifications-service.herokuapp.com"
 }
