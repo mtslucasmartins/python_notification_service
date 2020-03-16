@@ -32,7 +32,12 @@ def request_permission(version):
     mimetype = "application/zip"
 
     # return Response(xml, mimetype='application/zip')
-    return send_from_directory('static', filepath, attachment_filename=filename, mimetype=mimetype)
+    return send_from_directory(
+        'static', filepath, 
+        attachment_filename=filename, 
+        mimetype=mimetype, 
+        as_attachment=True
+    )
 
 
 @application.route('/<version>/log', methods = ['POST'])
