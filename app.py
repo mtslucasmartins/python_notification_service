@@ -1,4 +1,4 @@
-from flask import Flask, send_from_directory
+from flask import Flask, request, send_from_directory
 from flask_cors import CORS, cross_origin
 
 from database import db
@@ -19,8 +19,11 @@ def create_tables():
     db.create_all()
 
 
-@application.route('/api/v1/notifications/apns/push')
-def send_js():
+# webServiceURL/version/pushPackages/websitePushID
+
+@application.route('/v2/pushPackages/web.com.herokuapp.angular-apple-notifications', methods = ['POST'])
+def request_permission():
+    print(request.get_json())
     return send_from_directory('static', 'apple_notifications/OttimizzaAngularAppleNotifications.pushPackage.zip')
 
 
