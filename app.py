@@ -27,6 +27,12 @@ def request_permission():
     return send_from_directory('static', 'apple_notifications/OttimizzaAngularAppleNotifications.pushPackage.zip')
 
 
+@application.route('/<version>/log', methods = ['POST'])
+def request_permission_error_logs(version):
+    print("Log: " + request.get_json())
+    return {}
+
+
 # Blueprints
 application.register_blueprint(notification_blueprint)
 
