@@ -67,7 +67,12 @@ def send_notification(version, device_token, web_push_id):
     private_key_path = '{}/apple_notifications/{}/apns-prod.pem'.format(STATIC_PATH, web_push_id)
 
     token_hex = device_token # 'b5bb9d8014a0f9b1d61e21e796d78dccdf1352f23cd32812f4850b87'
-    payload = Payload(alert="Hello World!", sound="default", badge=1)
+    payload = Payload(
+        alert="Hello World!", 
+        sound="default", 
+        badge=1,
+        url_args=["boarding", "A998"]
+    )
     topic = web_push_id # 'com.example.App'
     client = APNsClient(private_key_path, password='', use_sandbox=False, use_alternative_port=False)
     client.send_notification(token_hex, payload, topic)
