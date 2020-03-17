@@ -2,8 +2,10 @@ from flask import Flask, request, Response, send_from_directory
 from flask_cors import CORS, cross_origin
 
 from database import db
+
 from routes import notification_blueprint
-from apple_notifications.routes import apple_notification_blueprint
+from apple_notifications.routes import apple_notifications
+
 from settings import HOST, PORT, SECRET
 
 import json
