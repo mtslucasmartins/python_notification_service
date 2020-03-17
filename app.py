@@ -20,14 +20,13 @@ db.init_app(application)
 def create_tables():
     db.create_all()
 
-
-# webServiceURL/version/pushPackages/websitePushID
-
-@application.route('/<version>/pushPackages/web.com.herokuapp.angular-apple-notifications', methods = ['GET', 'POST'])
-def request_permission(version):
+# Downloading Your Website Package
+# [POST] /<version>/pushPackages/<web_push_id>
+@application.route('/<version>/pushPackages/<app_id>', methods = ['GET', 'POST'])
+def request_permission(version, app_id):
     print(request.get_json())
 
-    filepath = 'apple_notifications/OttimizzaAngularAppleNotifications.pushPackage.zip'
+    filepath = 'apple_notifications/{}/pushPackage.zip'.format(app_id)
     filename = "OttimizzaAngularAppleNotifications.pushPackage.zip"
     mimetype = "application/zip"
 
@@ -39,6 +38,17 @@ def request_permission(version):
         as_attachment=True
     )
 
+# Forgetting Device Permission Policy
+# [DELETE] /<version>/devices/<device_token>/registrations/<web_push_id>
+
+@application.route('/<version>/devices/<device_token>/registrations/<app_id>', methods = ['DELETE'])
+def forgetting_device_permission_policy(version, device_token, app_id):
+    print(version)
+    print(device_token)
+    print(app_id)
+    print(request.headers.get('your-header-name'))
+
+    return json.dumps({ 'status': 'ok'})
 
 @application.route('/<version>/log', methods = ['POST'])
 def request_permission_error_logs(version):
