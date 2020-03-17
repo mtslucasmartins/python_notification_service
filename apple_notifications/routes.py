@@ -62,13 +62,20 @@ def send_notification(version, device_token, web_push_id):
     # Notification Payload
     # payload = request.get_json()
     from apple_notifications.apns.client import APNsClient
-    from apple_notifications.apns.payload import Payload
+    from apple_notifications.apns.payload import Payload, PayloadAlert
 
     private_key_path = '{}/apple_notifications/{}/apns-prod.pem'.format(STATIC_PATH, web_push_id)
 
     token_hex = device_token # 'b5bb9d8014a0f9b1d61e21e796d78dccdf1352f23cd32812f4850b87'
+
+    payload_alert = PayloadAlert(
+        title="Titulo da Notificacao",
+        body="Notificacao Funcionando",
+        action="View"
+    )
+
     payload = Payload(
-        alert="Hello World!", 
+        alert=payload_alert, 
         sound="default", 
         badge=1,
         url_args=["boarding", "A998"]
