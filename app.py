@@ -64,7 +64,7 @@ def create_tables():
 
 
 # Blueprints
-application.register_blueprint(apple_notification_blueprint)
+application.register_blueprint(apple_notifications)
 application.register_blueprint(notification_blueprint)
 #
 if __name__ == "__main__":
