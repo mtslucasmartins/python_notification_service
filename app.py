@@ -3,6 +3,7 @@ from flask_cors import CORS, cross_origin
 
 from database import db
 from routes import notification_blueprint
+from apple_notifications.routes import apple_notification_blueprint
 from settings import HOST, PORT, SECRET
 
 import json
@@ -20,49 +21,49 @@ db.init_app(application)
 def create_tables():
     db.create_all()
 
-# Downloading Your Website Package
-# [POST] /<version>/pushPackages/<web_push_id>
-@application.route('/<version>/pushPackages/<app_id>', methods = ['GET', 'POST'])
-def request_permission(version, app_id):
-    print(request.get_json())
+# # Downloading Your Website Package
+# # [POST] /<version>/pushPackages/<web_push_id>
+# @application.route('/<version>/pushPackages/<app_id>', methods = ['GET', 'POST'])
+# def request_permission(version, app_id):
+#     print(request.get_json())
 
-    filepath = 'apple_notifications/{}/pushPackage.zip'.format(app_id)
-    filename = "OttimizzaAngularAppleNotifications.pushPackage.zip"
-    mimetype = "application/zip"
+#     filepath = 'apple_notifications/{}/pushPackage.zip'.format(app_id)
+#     filename = "OttimizzaAngularAppleNotifications.pushPackage.zip"
+#     mimetype = "application/zip"
 
-    # return Response(xml, mimetype='application/zip')
-    return send_from_directory(
-        'static', filepath, 
-        attachment_filename=filename, 
-        mimetype=mimetype, 
-        as_attachment=True
-    )
+#     # return Response(xml, mimetype='application/zip')
+#     return send_from_directory(
+#         'static', filepath, 
+#         attachment_filename=filename, 
+#         mimetype=mimetype, 
+#         as_attachment=True
+#     )
 
-# Forgetting Device Permission Policy
-# [DELETE] /<version>/devices/<device_token>/registrations/<web_push_id>
+# # Forgetting Device Permission Policy
+# # [DELETE] /<version>/devices/<device_token>/registrations/<web_push_id>
 
-@application.route('/<version>/devices/<device_token>/registrations/<app_id>', methods = ['DELETE'])
-def forgetting_device_permission_policy(version, device_token, app_id):
-    print(version)
-    print(device_token)
-    print(app_id)
-    print(request.headers.get('your-header-name'))
+# @application.route('/<version>/devices/<device_token>/registrations/<app_id>', methods = ['DELETE'])
+# def forgetting_device_permission_policy(version, device_token, app_id):
+#     print(version)
+#     print(device_token)
+#     print(app_id)
+#     print(request.headers.get('Authorization'))
 
-    return json.dumps({ 'status': 'ok'})
+#     return json.dumps({ 'status': 'ok'})
 
-@application.route('/<version>/log', methods = ['POST'])
-def request_permission_error_logs(version):
-    try:
-        print("Log: \n" + json.dumps(request.get_json(), indent=4))
-    except Exception as e:
-        print(e)
+# @application.route('/<version>/log', methods = ['POST'])
+# def request_permission_error_logs(version):
+#     try:
+#         print("Log: \n" + json.dumps(request.get_json(), indent=4))
+#     except Exception as e:
+#         print(e)
 
-    return json.dumps({})
+#     return json.dumps({})
 
 
 # Blueprints
+application.register_blueprint(apple_notification_blueprint)
 application.register_blueprint(notification_blueprint)
-
 #
 if __name__ == "__main__":
     application.run(host=HOST, port=PORT, debug=True)
