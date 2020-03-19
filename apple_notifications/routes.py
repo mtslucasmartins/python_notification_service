@@ -46,6 +46,15 @@ def request_permission(version, web_push_id):
     #     'static', filepath, attachment_filename=filename, mimetype="application/zip", as_attachment=True
     # )
 
+@apple_notifications.route('/<version>/devices/<device_token>/registrations/<web_push_id>', methods = ['POST'])
+@cross_origin()
+def updating_device_permission_policy(version, device_token, web_push_id):
+    print('Version .........: {}'.format(version))
+    print('Device Token ....: {}'.format(device_token))
+    print('Web Push ID .....: {}'.format(web_push_id))
+    print('Authorization ...: {}'.format(request.headers.get('Authorization')))
+    return json.dumps({ 'status': 'ok'})
+
 
 @apple_notifications.route('/<version>/devices/<device_token>/registrations/<web_push_id>', methods = ['DELETE'])
 @cross_origin()
