@@ -1,10 +1,11 @@
 {
     "websiteName": "Ottimizza Accounts",
-    "websitePushID": "web.com.herokuapp.angular-apple-notifications",
+    "websitePushID": "web.br.com.ottimizza.app",
     "allowedDomains": [
-        "https://angular-apple-notifications.herokuapp.com"
+        "https://app.ottimizza.com.br",
+        "http://localhost:4200"
     ],
-    "urlFormatString": "http://accounts.ottimizza.com.br/%@/?flight=%@",
+    "urlFormatString": "http://app.ottimizza.com.br/%@/?flight=%@",
     "authenticationToken": "19f8d7a6e9fb8a7f6d9330dabe",
     "webServiceURL": "https://staging-notifications-service.herokuapp.com"
 }
