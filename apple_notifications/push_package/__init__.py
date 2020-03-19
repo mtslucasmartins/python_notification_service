@@ -5,7 +5,7 @@ import tempfile
 from apple_notifications.push_package.signer import PackageSigner
 from apple_notifications.push_package.utilities import PushPackageUtilities
 
-from definitions import STATIC_PATH
+from default_settings import STATIC_PATH
 
 class PushPackage:
 

@@ -2,13 +2,14 @@
 import json
 import os
 
-from flask import Blueprint, Flask, request, send_from_directory
+from flask import Blueprint, Flask, request, send_from_directory, send_file
 from flask_cors import CORS, cross_origin
 
 from default_settings import STATIC_PATH
 
 apple_notifications = Blueprint('apple_notification', __name__)
 
+from apple_notifications.push_package import PushPackage
 
 def get_static_path():
     return STATIC_PATH
@@ -27,12 +28,22 @@ def request_permission(version, web_push_id):
     """
     userinfo = request.get_json()
 
-    filepath = get_web_push_package_static_path(web_push_id)
-    filename = "pushPackage.zip"
+    push_package = PushPackage(web_push_id)
 
-    return send_from_directory(
-        'static', filepath, attachment_filename=filename, mimetype="application/zip", as_attachment=True
-    )
+    zip = push_package.create_push_package("1234")
+    temporary_package = push_package.create_temporary_zip(zip)
+
+    return send_file(temporary_package.name, 
+                     attachment_filename="pushPackage.zip", 
+                     mimetype="application/zip", 
+                     as_attachment=True)
+
+    # filepath = get_web_push_package_static_path(web_push_id)
+    # filename = "pushPackage.zip"
+
+    # return send_from_directory(
+    #     'static', filepath, attachment_filename=filename, mimetype="application/zip", as_attachment=True
+    # )
 
 
 @apple_notifications.route('/<version>/devices/<device_token>/registrations/<web_push_id>', methods = ['DELETE'])
@@ -85,10 +96,6 @@ def send_notification(version, device_token, web_push_id):
     client.send_notification(token_hex, payload, topic)
     
     return json.dumps({})
-
-
-
-
 
 
 # # To send multiple notifications in a batch
