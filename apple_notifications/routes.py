@@ -1,6 +1,7 @@
 
 import json
 import os
+import uuid 
 
 from flask import Blueprint, Flask, request, send_from_directory, send_file
 from flask_cors import CORS, cross_origin
@@ -30,7 +31,7 @@ def request_permission(version, web_push_id):
 
     push_package = PushPackage(web_push_id)
 
-    zip = push_package.create_push_package("1234")
+    zip = push_package.create_push_package(str(uuid.uuid4()))
     temporary_package = push_package.create_temporary_zip(zip)
 
     return send_file(temporary_package.name, 
