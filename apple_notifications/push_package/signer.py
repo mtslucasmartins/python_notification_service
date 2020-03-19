@@ -3,7 +3,8 @@ from OpenSSL import crypto
 class PackageSigner:
 
     def __init__(self, package_dir, p12_certificate):
-        self.PKCS7_DETACHED = 0x40
+        self.PKCS7_BINARY = 0x80
+        self.PKCS7_DETACHED = 0x40 
         with open(p12_certificate, 'rb') as f:
             self.p12_data = f.read()
         self.package_dir = package_dir
@@ -27,7 +28,7 @@ class PackageSigner:
             private_key._pkey, 
             crypto._ffi.NULL, 
             bio_in, 
-            self.PKCS7_DETACHED
+            self.PKCS7_BINARY | self.PKCS7_DETACHED
         )
 
         self.write(signature_dest, pkcs7)
