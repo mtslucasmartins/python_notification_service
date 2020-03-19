@@ -33,3 +33,6 @@ Werkzeug==0.15.2
 # 
 hyper
 jwt
+
+# 
+pyOpenSSL==19.1.0
