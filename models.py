@@ -121,7 +121,7 @@ class APNPushEndpoint(db.Model):
     website_push_id = db.Column(db.String(), unique=False, nullable=False, primary_key=True)
     active          = db.Column(db.Boolean)
 
-    def __init(self, authentication_token, username, application_id, website_push_id, device_token=None, active=False):
+    def __init__(self, authentication_token, username, application_id, website_push_id, device_token=None, active=False):
         self.authentication_token = authentication_token
         self.username        = username
         self.application_id  = application_id
