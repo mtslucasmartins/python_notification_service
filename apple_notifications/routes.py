@@ -11,6 +11,8 @@ from default_settings import STATIC_PATH
 apple_notifications = Blueprint('apple_notification', __name__)
 
 from apple_notifications.push_package import PushPackage
+from models import APNPushEndpoint
+
 
 def get_static_path():
     return STATIC_PATH
@@ -26,13 +28,24 @@ def request_permission(version, web_push_id):
         Downloading Your Website Package
         GET  > '/<version>/pushPackages/<web_push_id>' -> Downloads.
         POST > '/<version>/pushPackages/<web_push_id>' -> Downloads And Sends Userinfo.
+
+        --
+        Validar se webpushid existe.
+        Criar JWT para authentication_token
     """
     userinfo = request.get_json()
 
-    push_package = PushPackage(web_push_id)
+    username = userinfo['username']
+    application_id = userinfo['application_id']
+    authentication_token = str(uuid.uuid4())
 
+    # creating the push package
+    push_package = PushPackage(web_push_id)
     zip = push_package.create_push_package(str(uuid.uuid4()))
     temporary_package = push_package.create_temporary_zip(zip)
+
+    # creating push endpoint on database...
+    endpoint = APNPushEndpoint(authentication_token, username, application_id, web_push_id).save()
 
     return send_file(temporary_package.name, 
                      attachment_filename="pushPackage.zip", 
