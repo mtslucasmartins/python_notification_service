@@ -143,6 +143,15 @@ class APNPushEndpoint(db.Model):
             "active": self.active
         }
 
+    def delete(self):
+        try:
+            db.session.delete(self)
+            db.session.commit()
+        except Exception as e:
+            print(e)
+            return None
+        return self
+
     def save(self):
         try:
             db.session.add(self)

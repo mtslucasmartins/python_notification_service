@@ -76,6 +76,7 @@ def updating_device_permission_policy(version, device_token, web_push_id):
 
     endpoint = APNPushEndpoint.find_by_authentication_token(authentication_token)
     endpoint.device_token = device_token
+    endpoint.active = True
     endpoint.save()
 
     return json.dumps({ 'status': 'ok'})
@@ -84,10 +85,13 @@ def updating_device_permission_policy(version, device_token, web_push_id):
 @apple_notifications.route('/<version>/devices/<device_token>/registrations/<web_push_id>', methods = ['DELETE'])
 @cross_origin()
 def forgetting_device_permission_policy(version, device_token, web_push_id):
-    print('Version .........: {}'.format(version))
-    print('Device Token ....: {}'.format(device_token))
-    print('Web Push ID .....: {}'.format(web_push_id))
-    print('Authorization ...: {}'.format(request.headers.get('Authorization')))
+    # 
+    authorization_header = request.headers.get('Authorization').strip()
+    authentication_token = authorization_header.split(' ')[1].strip()
+
+    endpoint = APNPushEndpoint.find_by_authentication_token(authentication_token)
+    endpoint.delete()
+    
     return json.dumps({ 'status': 'ok'})
 
 
