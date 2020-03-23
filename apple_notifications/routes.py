@@ -110,9 +110,9 @@ def send_notification(version, device_token, web_push_id):
     payload_json = request.get_json()
     
     # building the notification object
-    payload_alert = PayloadAlert(payload_json['alert'])
+    payload_alert = PayloadAlert(**payload_json['alert'])
 
-    payload = Payload(payload_json)
+    payload = Payload(**payload_json)
     payload.alert = payload_alert
 
     print(json.dumps(payload_alert.dict()))
