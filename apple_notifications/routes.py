@@ -128,6 +128,36 @@ def send_notification(version, device_token, web_push_id):
     
     return json.dumps({})
 
+@apple_notifications.route('/api/v1/notifications/apns/push', methods = ['POST'])
+@cross_origin()
+def send_notification(version, device_token, web_push_id):
+
+    request_body = request.get_json()
+
+    username = request_body.get('username')
+    application_id = request_body.get('applicationId')
+    notification = request_body.get('notification')
+
+    # building the notification object
+    payload_alert = PayloadAlert(**notification['alert'])
+    payload = Payload(**notification)
+    payload.alert = payload_alert
+
+    # certificate location
+    private_key_path = '{}/apple_notifications/{}/certificates/apns-pro.pem'.format(STATIC_PATH, web_push_id)
+
+    notifications = []
+    for endpoint in APNPushEndpoint.get_endpoints_by_username_and_application_id(username, application_id):
+        notifications.append({
+            "payload": payload,
+            "token": endpoint.device_token
+        })
+
+    # creating the connection to APNs and sending notification to device.
+    client = APNsClient(private_key_path, password='', use_sandbox=False, use_alternative_port=False)
+    client.send_notification_batch(notifications, web_push_id)
+    
+    return json.dumps({})
 
 # # To send multiple notifications in a batch
 # Notification = collections.namedtuple('Notification', ['token', 'payload'])
