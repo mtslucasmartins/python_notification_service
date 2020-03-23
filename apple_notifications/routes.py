@@ -6,28 +6,25 @@ import uuid
 from flask import Blueprint, Flask, request, send_from_directory, send_file
 from flask_cors import CORS, cross_origin
 
+from apple_notifications.apns.client import APNsClient
+from apple_notifications.apns.payload import Payload, PayloadAlert
+from apple_notifications.push_package import PushPackage
+
 from default_settings import STATIC_PATH
+
+from models import APNPushEndpoint
 
 apple_notifications = Blueprint('apple_notification', __name__)
 
-from apple_notifications.push_package import PushPackage
-from models import APNPushEndpoint
-
-
+# listagem de pacotes APNs disponiveis.
 def available_packages():
     return [
         'web.br.com.ottimizza.app'
     ]
 
+# método responsavel pela validação de pacote APN.
 def package_exists(package):
     return package in available_packages()
-
-
-def get_static_path():
-    return STATIC_PATH
-
-def get_web_push_package_static_path(web_push_id):
-    return 'apple_notifications/{}/pushPackage.zip'.format(web_push_id)
 
 
 @apple_notifications.route('/<version>/pushPackages/<web_push_id>', methods = ['GET', 'POST'])
@@ -110,29 +107,12 @@ def request_permission_error_logs(version):
 @cross_origin()
 def send_notification(version, device_token, web_push_id):
     # Notification Payload
-    # payload = request.get_json()
-    from apple_notifications.apns.client import APNsClient
-    from apple_notifications.apns.payload import Payload, PayloadAlert
+    payload = request.get_json()
+    
+    private_key_path = '{}/apple_notifications/{}/certificates/apns-pro.pem'.format(STATIC_PATH, web_push_id)
 
-    private_key_path = '{}/apple_notifications/{}/apns-prod.pem'.format(STATIC_PATH, web_push_id)
-
-    token_hex = device_token # 'b5bb9d8014a0f9b1d61e21e796d78dccdf1352f23cd32812f4850b87'
-
-    payload_alert = PayloadAlert(
-        title="Titulo da Notificacao",
-        body="Notificacao Funcionando",
-        action="View"
-    )
-
-    payload = Payload(
-        alert=payload_alert, 
-        sound="default", 
-        badge=1,
-        url_args=["boarding", "A998"]
-    )
-    topic = web_push_id # 'com.example.App'
     client = APNsClient(private_key_path, password='', use_sandbox=False, use_alternative_port=False)
-    client.send_notification(token_hex, payload, topic)
+    client.send_notification(device_token, payload, web_push_id)
     
     return json.dumps({})
 
