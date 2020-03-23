@@ -130,7 +130,7 @@ def send_notification(version, device_token, web_push_id):
 
 @apple_notifications.route('/api/v1/notifications/apns/push', methods = ['POST'])
 @cross_origin()
-def send_notification(version, device_token, web_push_id):
+def send_notification():
 
     request_body = request.get_json()
 
