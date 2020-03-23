@@ -115,6 +115,8 @@ def send_notification(version, device_token, web_push_id):
     payload = Payload(payload_json)
     payload.alert = payload_alert
 
+    print(json.dumps(payload.dict()))
+
     # certificate location
     private_key_path = '{}/apple_notifications/{}/certificates/apns-pro.pem'.format(STATIC_PATH, web_push_id)
 
