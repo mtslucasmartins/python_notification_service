@@ -130,12 +130,13 @@ def send_notification(version, device_token, web_push_id):
 
 @apple_notifications.route('/api/v1/notifications/apns/push', methods = ['POST'])
 @cross_origin()
-def send_notification():
+def send_notification_batch():
 
     request_body = request.get_json()
 
     username = request_body.get('username')
     application_id = request_body.get('applicationId')
+    web_push_id = request_body.get('webPushId')
     notification = request_body.get('notification')
 
     # building the notification object
