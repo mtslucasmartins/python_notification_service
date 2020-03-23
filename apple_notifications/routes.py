@@ -14,6 +14,15 @@ from apple_notifications.push_package import PushPackage
 from models import APNPushEndpoint
 
 
+def available_packages():
+    return [
+        'web.br.com.ottimizza.app'
+    ]
+
+def package_exists(package):
+    return package in available_packages()
+
+
 def get_static_path():
     return STATIC_PATH
 
@@ -35,37 +44,40 @@ def request_permission(version, web_push_id):
     """
     userinfo = request.get_json()
 
+    if not package_exists(web_push_id):
+        return { 'status': 'error' }
+
     username = userinfo['username']
     application_id = userinfo['application_id']
     authentication_token = str(uuid.uuid4())
 
     # creating the push package
     push_package = PushPackage(web_push_id)
-    zip = push_package.create_push_package(str(uuid.uuid4()))
-    temporary_package = push_package.create_temporary_zip(zip)
+
+    # creating the temporary zip...
+    zip_file = push_package.create_push_package(authentication_token)
+    tmp_file = push_package.create_temporary_zip(zip_file)
 
     # creating push endpoint on database...
-    endpoint = APNPushEndpoint(authentication_token, username, application_id, web_push_id).save()
+    endpoint = APNPushEndpoint.create(authentication_token, username, application_id, web_push_id)
 
-    return send_file(temporary_package.name, 
+    return send_file(tmp_file.name, 
                      attachment_filename="pushPackage.zip", 
                      mimetype="application/zip", 
                      as_attachment=True)
 
-    # filepath = get_web_push_package_static_path(web_push_id)
-    # filename = "pushPackage.zip"
-
-    # return send_from_directory(
-    #     'static', filepath, attachment_filename=filename, mimetype="application/zip", as_attachment=True
-    # )
 
 @apple_notifications.route('/<version>/devices/<device_token>/registrations/<web_push_id>', methods = ['POST'])
 @cross_origin()
 def updating_device_permission_policy(version, device_token, web_push_id):
-    print('Version .........: {}'.format(version))
-    print('Device Token ....: {}'.format(device_token))
-    print('Web Push ID .....: {}'.format(web_push_id))
-    print('Authorization ...: {}'.format(request.headers.get('Authorization')))
+    # 
+    authorization_header = request.headers.get('Authorization').strip()
+    authentication_token = authorization_header.split(' ')[1].strip()
+
+    endpoint = APNPushEndpoint.find_by_authentication_token(authentication_token)
+    endpoint.device_token = device_token
+    endpoint.save()
+
     return json.dumps({ 'status': 'ok'})
 
 

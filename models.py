@@ -121,13 +121,17 @@ class APNPushEndpoint(db.Model):
     website_push_id = db.Column(db.String(), unique=False, nullable=False, primary_key=True)
     active          = db.Column(db.Boolean)
 
-    def __init__(self, authentication_token, username, application_id, website_push_id, device_token=None, active=False):
+    def __init__(self, authentication_token, username, application_id, website_push_id, device_token='', active=False):
         self.authentication_token = authentication_token
         self.username        = username
         self.application_id  = application_id
         self.website_push_id = website_push_id
         self.device_token    = device_token
         self.active          = active
+
+    @classmethod
+    def create(cls, authentication_token, username, application_id, website_push_id):
+        return cls(authentication_token, username, application_id, website_push_id).save()
 
     def json(self):
         return {
@@ -147,6 +151,10 @@ class APNPushEndpoint(db.Model):
             print(e)
             return None
         return self
+
+    @classmethod
+    def find_by_authentication_token(cls, authentication_token):
+        return APNPushEndpoint.query.filter_by(authentication_token=authentication_token).first()
 
     @classmethod
     def get_endpoints_by_username_and_application_id(cls, username, application_id):
