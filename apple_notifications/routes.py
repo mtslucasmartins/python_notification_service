@@ -151,7 +151,7 @@ def send_notification_batch():
     for endpoint in APNPushEndpoint.get_endpoints_by_username_and_application_id(username, application_id):
         notifications.append({
             "payload": payload,
-            "token": endpoint.device_token
+            "token": endpoint["device_token"]
         })
 
     # creating the connection to APNs and sending notification to device.
