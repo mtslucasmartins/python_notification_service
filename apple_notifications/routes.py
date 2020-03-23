@@ -109,8 +109,16 @@ def send_notification(version, device_token, web_push_id):
     # Notification Payload
     payload = request.get_json()
     
+    # building the notification object
+    payload_alert = PayloadAlert(payload['alert'])
+    payload['alert'] = payload_alert
+
+    payload = Payload(payload)
+
+    # certificate location
     private_key_path = '{}/apple_notifications/{}/certificates/apns-pro.pem'.format(STATIC_PATH, web_push_id)
 
+    # creating the connection to APNs and sending notification to device.
     client = APNsClient(private_key_path, password='', use_sandbox=False, use_alternative_port=False)
     client.send_notification(device_token, payload, web_push_id)
     
