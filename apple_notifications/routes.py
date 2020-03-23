@@ -6,7 +6,7 @@ import uuid
 from flask import Blueprint, Flask, request, send_from_directory, send_file
 from flask_cors import CORS, cross_origin
 
-from apple_notifications.apns.client import APNsClient
+from apple_notifications.apns.client import APNsClient, Notification
 from apple_notifications.apns.payload import Payload, PayloadAlert
 from apple_notifications.push_package import PushPackage
 
@@ -147,12 +147,9 @@ def send_notification_batch():
     # certificate location
     private_key_path = '{}/apple_notifications/{}/certificates/apns-pro.pem'.format(STATIC_PATH, web_push_id)
 
-    notifications = []
+    notifications: Iterable[Notification] = []
     for endpoint in APNPushEndpoint.get_endpoints_by_username_and_application_id(username, application_id):
-        notifications.append({
-            "payload": payload,
-            "token": endpoint["device_token"]
-        })
+        notifications.append(Notification(payload=payload, token=endpoint["device_token"]))
 
     # creating the connection to APNs and sending notification to device.
     client = APNsClient(private_key_path, password='', use_sandbox=False, use_alternative_port=False)
