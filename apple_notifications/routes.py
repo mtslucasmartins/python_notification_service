@@ -107,13 +107,13 @@ def request_permission_error_logs(version):
 @cross_origin()
 def send_notification(version, device_token, web_push_id):
     # Notification Payload
-    payload = request.get_json()
+    payload_json = request.get_json()
     
     # building the notification object
-    payload_alert = PayloadAlert(payload['alert'])
-    payload['alert'] = payload_alert
+    payload_alert = PayloadAlert(payload_json['alert'])
 
     payload = Payload(payload)
+    payload.alert = payload_alert
 
     # certificate location
     private_key_path = '{}/apple_notifications/{}/certificates/apns-pro.pem'.format(STATIC_PATH, web_push_id)
