@@ -112,7 +112,7 @@ def send_notification(version, device_token, web_push_id):
     # building the notification object
     payload_alert = PayloadAlert(payload_json['alert'])
 
-    payload = Payload(payload)
+    payload = Payload(payload_json)
     payload.alert = payload_alert
 
     # certificate location
