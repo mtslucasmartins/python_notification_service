@@ -6,7 +6,7 @@ import pywebpush as wp
 from flask import abort, Blueprint, g, jsonify, render_template, request, Response
 from flask_cors import cross_origin
 
-from models import Application, WebPushEndpoint, FCMPushEndpoint
+from models import Application, WebPushEndpoint, FCMPushEndpoint, PushNotification
 from settings import VAPID
 
 import requests 
@@ -155,8 +155,18 @@ def fcm_push():
     application_id = request_body.get('applicationId')
     notification = request_body.get('notification')
     
+    # gets the details needed to send the notification    
     application = Application.get_application(application_id)
    
+    # store the notification
+    notification_model = PushNotification(
+        username=username,
+        application_id=application_id,
+        notification=json.dumps(notification)
+    )
+    notification_model.save()    
+
+    # sends the notification to all registered endpoints.
     for endpoint in FCMPushEndpoint.get_endpoints_by_username_and_application_id(username, application_id):
         data = { 'notification': notification, 'to': endpoint.get('registration_id') }
         headers = {'Content-Type': 'application/json', 'Authorization': 'key={}'.format(application.get('server_key'))}
