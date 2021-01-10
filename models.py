@@ -1,5 +1,7 @@
 import json
+import uuid
 
+from datetime import datetime
 from database import db
 
 class Application(db.Model):
@@ -108,3 +110,58 @@ class FCMPushEndpoint(db.Model):
                         .filter_by(username = username, application_id = application_id).all()
         return list(map(lambda x: x.json(), endpoints))
 
+
+class PushNotification(db.Model):
+    """"""
+    __tablename__ = 'notifications'
+
+    id             = db.Column(db.UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True)
+
+    username       = db.Column(db.String(), nullable=False)
+    application_id = db.Column(db.String(), nullable=False)
+
+    notification   = db.Column(db.String(), nullable=False)
+
+    is_seen        = db.Column(db.Boolean(), nullable=False, default=False)
+
+    created_at     = db.Column(db.Date())
+    updated_at     = db.Column(db.Date())
+
+    def __repr__(self):
+        return str(json.dumps(self.as_json()))
+    
+    def as_json(self):
+        return { 
+            "username": self.username, 
+            "application_id": self.application_id,
+            "notification": self.notification
+        }
+
+    def pre_persist(self):
+        if self.created_at == None:
+                self.created_at = datetime.now()
+        self.updated_at = datetime.now()
+
+    def save(self):
+        try:
+            self.pre_persist()
+
+            db.session.add(self)
+            db.session.commit()
+        except Exception as ex:
+            db.session.rollback()
+            raise Exception('Erro ao inserir notificação!')
+
+    @classmethod
+    def find_by_username(cls, username):
+        return db.session.query(cls) \
+                         .filter(cls.username == username).all()
+
+    @classmethod
+    def find_by_username_and_application_id(cls, username, application_id=None):
+        if application_id == None:
+            return cls.find_by_username(username)
+
+        return db.session.query(cls) \
+                         .filter(cls.username == username) \
+                         .filter(cls.application_id == application_id).all()
