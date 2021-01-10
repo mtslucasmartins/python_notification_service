@@ -157,9 +157,6 @@ def fcm_push():
     
     application = Application.get_application(application_id)
    
-    print('username: {}'.format(username))
-    print('application_id: {}'.format(application_id))
-
     for endpoint in FCMPushEndpoint.get_endpoints_by_username_and_application_id(username, application_id):
         data = { 'notification': notification, 'to': endpoint.get('registration_id') }
         headers = {'Content-Type': 'application/json', 'Authorization': 'key={}'.format(application.get('server_key'))}
