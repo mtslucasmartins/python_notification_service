@@ -155,7 +155,7 @@ def fcm_push():
     application_id = request_body.get('applicationId')
     notification = request_body.get('notification')
     
-    application = Application.get_application(request_body.get('applicationId'))
+    application = Application.get_application(application_id)
    
     print('username: {}'.format(username))
     print('application_id: {}'.format(application_id))
