@@ -2,6 +2,19 @@
 
 A simple service application to send WebPush API Notifications.
 
+### Examples
+
+#### Getting persisted notifications
+```shell
+curl -v "https://<>/api/v1/notifications?username=lucas@ottimizza.com.br&application_id=ottimizza " \
+  -H 
+  -H 
+  -o /dev/null
+
+```
+
+
+
 ## Installation
 
 This project's official image is available at [DockerHub](https://hub.docker.com/r/mtslucasmartins/python_notification_service).
