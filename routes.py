@@ -156,6 +156,8 @@ def get_notifications():
     # getting notification based on arguments passed on query string.
     # TODO: replace username for principal value, accepting request only with access_token
     notifications = PushNotification.find_by_username_and_application_id(username, application_id)
+    notifications = list(map(lambda el: el.json(), notifications))
+
 
     return jsonify(notifications)
 
