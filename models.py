@@ -138,8 +138,8 @@ class PushNotification(db.Model):
             "application_id": self.application_id,
             "notification": json.loads(self.notification),
             "is_seen": self.is_seen,
-            "created_at": self.created_at,
-            "updated_at": self.updated_at
+            "created_at": self.created_at.isoformat(),
+            "updated_at": self.updated_at.isoformat()
         }
 
     def pre_persist(self):
