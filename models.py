@@ -136,7 +136,7 @@ class PushNotification(db.Model):
             "id": self.id,
             "username": self.username, 
             "application_id": self.application_id,
-            "notification": self.notification,
+            "notification": json.loads(self.notification),
             "is_seen": self.is_seen,
             "created_at": self.created_at,
             "updated_at": self.updated_at
