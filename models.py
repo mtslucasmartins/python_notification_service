@@ -125,8 +125,8 @@ class PushNotification(db.Model):
 
     is_seen        = db.Column(db.Boolean(), nullable=False, default=False)
 
-    created_at     = db.Column(db.Date())
-    updated_at     = db.Column(db.Date())
+    created_at     = db.Column(db.DateTime())
+    updated_at     = db.Column(db.DateTime())
 
     def __repr__(self):
         return str(json.dumps(self.json()))
