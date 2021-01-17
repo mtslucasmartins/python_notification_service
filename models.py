@@ -129,9 +129,9 @@ class PushNotification(db.Model):
     updated_at     = db.Column(db.Date())
 
     def __repr__(self):
-        return str(json.dumps(self.as_json()))
+        return str(json.dumps(self.json()))
     
-    def as_json(self):
+    def json(self):
         return { 
             "id": self.id,
             "username": self.username, 
