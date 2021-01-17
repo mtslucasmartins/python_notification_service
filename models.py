@@ -133,9 +133,13 @@ class PushNotification(db.Model):
     
     def as_json(self):
         return { 
+            "id": self.id,
             "username": self.username, 
             "application_id": self.application_id,
-            "notification": self.notification
+            "notification": self.notification,
+            "is_seen": self.is_seen,
+            "created_at": self.created_at,
+            "updated_at": self.updated_at
         }
 
     def pre_persist(self):
