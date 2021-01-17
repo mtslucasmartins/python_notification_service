@@ -3,6 +3,7 @@ import uuid
 
 from datetime import datetime
 from database import db
+from sqlalchemy.dialects.postgresql import UUID
 
 class Application(db.Model):
     __tablename__ = 'applications'
@@ -115,7 +116,7 @@ class PushNotification(db.Model):
     """"""
     __tablename__ = 'notifications'
 
-    id             = db.Column(db.UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True)
+    id             = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True)
 
     username       = db.Column(db.String(), nullable=False)
     application_id = db.Column(db.String(), nullable=False)
