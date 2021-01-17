@@ -6,8 +6,8 @@ A simple service application to send WebPush API Notifications.
 
 #### Getting persisted notifications
 ```shell
-curl -v "https://staging-notifications-service.herokuapp.com/api/v1/notifications?username=lucas@ottimizza.com.br&application_id=ottimizza " \
-  -o /dev/null
+curl -v "https://staging-notifications-service.herokuapp.com/api/v1/notifications?username=lucas@ottimizza.com.br&application_id=ottimizza" -o /dev/null
+
 
 ```
 
