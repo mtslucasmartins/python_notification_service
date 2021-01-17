@@ -146,6 +146,20 @@ def fcm_get_subscriptions(username):
     return jsonify(FCMPushEndpoint.get_endpoints_by_username(username))
 
 
+@notification_blueprint.route('/api/v1/notifications', methods=['GET'])
+@cross_origin()
+def get_notifications():
+    # TODO: ? add order_by and filter values  
+    username = request.args.get('username')
+    application_id = request.args.get('application_id')
+
+    # getting notification based on arguments passed on query string.
+    # TODO: replace username for principal value, accepting request only with access_token
+    notifications = PushNotification.find_by_username_and_application_id(username, application_id)
+
+    return jsonify(notifications)
+
+
 @notification_blueprint.route('/api/v1/notifications/fcm/push', methods=['POST'])
 @cross_origin()
 def fcm_push():
