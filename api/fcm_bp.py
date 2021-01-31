@@ -1,6 +1,5 @@
 import json
 import uuid
-import pywebpush as wp
 
 from flask import abort, Blueprint, g, jsonify, render_template, request, Response
 from flask_cors import cross_origin
@@ -10,10 +9,12 @@ from settings import VAPID
 
 import requests 
 
+
 # *****************************************************************************
 # Blueprint Definition
 # *****************************************************************************
 fcm_notifications_blueprint = Blueprint('fcm_notifications', __name__)
+
 
 # *****************************************************************************
 # Error Handling:
@@ -33,6 +34,7 @@ def error_page_not_found(e):
     response = json.dumps({"status": "error", "message": "not found"})
     headers = {"Content-Type": "application/json"}
     return (response, status, headers)
+
 
 # *****************************************************************************
 # Blueprint Endpoints

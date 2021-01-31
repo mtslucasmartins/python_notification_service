@@ -1,6 +1,9 @@
+import auth
+
 import json
 import uuid
 import pywebpush as wp
+
 
 from flask import abort, Blueprint, g, jsonify, render_template, request, Response
 from flask_cors import cross_origin
@@ -10,10 +13,33 @@ from settings import VAPID
 
 import requests 
 
+
 # *****************************************************************************
 # Blueprint Definition
 # *****************************************************************************
 notifications_blueprint = Blueprint('notifications', __name__)
+
+# *****************************************************************************
+# Blueprint Pre Request Validations
+# *****************************************************************************
+@notifications_blueprint.before_request
+def request_headers_validation():
+    header_authorization = request.headers.get('Authorization')
+    header_authorization = '' if header_authorization is None else header_authorization
+    request_context.authorization_header = header_authorization
+
+    if request.method == 'OPTIONS':
+        return
+
+    if header_authorization.startswith('Bearer '):
+        try:
+            access_token = header_authorization.replace('Bearer ', '')
+            request_context.access_token = access_token
+            request_context.principal = auth.jwt_verify_and_decode(access_token)
+        except:
+            abort(401)
+    else:
+        abort(401)
 
 
 # *****************************************************************************

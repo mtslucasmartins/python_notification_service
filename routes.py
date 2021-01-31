@@ -39,20 +39,20 @@ def error_page_not_found(e):
 # Requests:
 # *****************************************************************************
 
-@notification_blueprint.route('/api/v1/applications/register', methods=['POST'])
-@cross_origin()
-def applications_register():
-    request_body = request.get_json()
-    application_id = request_body.get('applicationId')
-    server_key = request_body.get('serverKey')
+# @notification_blueprint.route('/api/v1/applications/register', methods=['POST'])
+# @cross_origin()
+# def applications_register():
+#     request_body = request.get_json()
+#     application_id = request_body.get('applicationId')
+#     server_key = request_body.get('serverKey')
 
-    application = Application(application_id, server_key)
-    application = application.save()
+#     application = Application(application_id, server_key)
+#     application = application.save()
 
-    if application is None:
-        return jsonify({'message': 'Could not subsribe!'})
+#     if application is None:
+#         return jsonify({'message': 'Could not subsribe!'})
 
-    return jsonify(application.json())
+#     return jsonify(application.json())
 
 @notification_blueprint.route('/api/v1/notifications/web/subscribe', methods=['GET', 'POST'])
 @cross_origin()
@@ -174,19 +174,19 @@ def push():
 #     # extracting data in json format 
 #     return jsonify({'status': 'success'}) 
 
-@notification_blueprint.route('/api/v1/notifications', methods=['GET'])
-@cross_origin()
-def get_notifications():
-    # TODO: ? add order_by and filter values  
-    username = request.args.get('username')
-    application_id = request.args.get('application_id')
+# @notification_blueprint.route('/api/v1/notifications', methods=['GET'])
+# @cross_origin()
+# def get_notifications():
+#     # TODO: ? add order_by and filter values  
+#     username = request.args.get('username')
+#     application_id = request.args.get('application_id')
 
-    # getting notification based on arguments passed on query string.
-    # TODO: replace username for principal value, accepting request only with access_token
-    notifications = PushNotification.find_by_username_and_application_id(username, application_id)
-    notifications = list(map(lambda el: el.json(), notifications))
+#     # getting notification based on arguments passed on query string.
+#     # TODO: replace username for principal value, accepting request only with access_token
+#     notifications = PushNotification.find_by_username_and_application_id(username, application_id)
+#     notifications = list(map(lambda el: el.json(), notifications))
 
 
-    return jsonify(notifications)
+#     return jsonify(notifications)
 
 
