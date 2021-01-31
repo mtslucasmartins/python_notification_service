@@ -36,7 +36,8 @@ def request_headers_validation():
             access_token = header_authorization.replace('Bearer ', '')
             request_context.access_token = access_token
             request_context.principal = auth.jwt_verify_and_decode(access_token)
-        except:
+        except Exception as e:
+            print(e)
             abort(401)
     else:
         abort(401)
