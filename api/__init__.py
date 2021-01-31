@@ -33,11 +33,10 @@ def request_headers_validation():
 
     if header_authorization.startswith('Bearer '):
         try:
-            access_token = header_authorization.replace('Bearer ', '')
+            access_token = header_authorization.replace('Bearer ', '').strip()
             request_context.access_token = access_token
             request_context.principal = auth.jwt_verify_and_decode(access_token)
         except Exception as e:
-            print(e)
             abort(401)
     else:
         abort(401)
