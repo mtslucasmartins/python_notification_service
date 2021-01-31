@@ -13,12 +13,12 @@ import requests
 # *****************************************************************************
 # Blueprint Definition
 # *****************************************************************************
-fcm_notifications_blueprint = Blueprint('notification', __name__)
+fcm_notifications_blueprint = Blueprint('fcm_notifications', __name__)
 
 # *****************************************************************************
 # Error Handling:
 # *****************************************************************************
-@notification_blueprint.errorhandler(401)
+@fcm_notifications_blueprint.errorhandler(401)
 @cross_origin()
 def error_page_unauthorized(e):
     status = 401
@@ -26,7 +26,7 @@ def error_page_unauthorized(e):
     headers = {"Content-Type": "application/json"}
     return (response, status, headers)
 
-@notification_blueprint.errorhandler(404)
+@fcm_notifications_blueprint.errorhandler(404)
 @cross_origin()
 def error_page_not_found(e):
     status = 404
@@ -37,7 +37,7 @@ def error_page_not_found(e):
 # *****************************************************************************
 # Blueprint Endpoints
 # *****************************************************************************
-@notification_blueprint.route('/subscribe', methods=['GET', 'POST'])
+@fcm_notifications_blueprint.route('/subscribe', methods=['GET', 'POST'])
 @cross_origin()
 def fcm_subscribe():
     if request.method == "GET":
@@ -56,12 +56,12 @@ def fcm_subscribe():
 
     return jsonify(subscription.json())
 
-@notification_blueprint.route('/<username>/subscriptions', methods=['GET', 'POST'])
+@fcm_notifications_blueprint.route('/<username>/subscriptions', methods=['GET', 'POST'])
 @cross_origin()
 def fcm_get_subscriptions(username):
     return jsonify(FCMPushEndpoint.get_endpoints_by_username(username))
 
-@notification_blueprint.route('/push', methods=['POST'])
+@fcm_notifications_blueprint.route('/push', methods=['POST'])
 @cross_origin()
 def fcm_push():
     request_body = request.get_json()
