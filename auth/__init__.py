@@ -26,7 +26,7 @@ def jwt_verify_and_decode(access_token, public_key=JWT_PUBLIC_KEY):
 
     try:
         print(access_token)
-        print(access_token.trim())
+        print(access_token.lstrip())
         print(public_key)
 
         decoded_jwt = jwt.decode(
