@@ -5,7 +5,7 @@ import uuid
 import pywebpush as wp
 
 
-from flask import abort, Blueprint, g, jsonify, render_template, request, Response
+from flask import abort, Blueprint, g as request_context, jsonify, render_template, request, Response
 from flask_cors import cross_origin
 
 from models import Application, WebPushEndpoint, FCMPushEndpoint, PushNotification
