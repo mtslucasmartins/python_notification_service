@@ -35,6 +35,7 @@ def jwt_verify_and_decode(access_token, public_key=JWT_PUBLIC_KEY):
 
         return decoded_jwt
     except Exception as e:
+        print(e)
         raise InvalidJWTSignatureException('Invalid signature or jwt token')
 
     return decoded_jwt
