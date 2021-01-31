@@ -39,7 +39,7 @@ def error_page_not_found(e):
 # *****************************************************************************
 # Blueprint Endpoints
 # *****************************************************************************
-@notification_blueprint.route('/api/v1/applications/register', methods=['POST'])
+@notifications_blueprint.route('/api/v1/applications/register', methods=['POST'])
 @cross_origin()
 def applications_register():
     # TODO: move this request into an admin_bp.py and restrict access
