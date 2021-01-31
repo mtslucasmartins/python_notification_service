@@ -21,7 +21,7 @@ def create_tables():
     db.create_all()
 
 # Blueprints
-application.register_blueprint(notification_blueprint)
+application.register_blueprint(notification_blueprint, url_prefix="/")
 application.register_blueprint(fcm_notifications_blueprint, url_prefix="/api/v1/notifications/fcm")
 
 
