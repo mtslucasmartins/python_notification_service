@@ -25,6 +25,8 @@ def jwt_verify_and_decode(access_token, public_key=JWT_PUBLIC_KEY):
     options = { "verify_signature": True }
 
     try:
+        print(access_token)
+        print(public_key)
         decoded_jwt = jwt.decode(
             access_token, key=public_key, algorithms=algorithms, options=options
         )
