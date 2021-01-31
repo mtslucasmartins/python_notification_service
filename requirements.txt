@@ -21,7 +21,6 @@ psycopg2==2.8.2
 py==1.8.0
 py-vapid==1.4.0
 pycparser==2.19
-jwt==1.1.0
 PyJWT==2.0.1
 pymongo==3.7.2
 pytest==4.4.0
