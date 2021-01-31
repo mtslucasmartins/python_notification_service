@@ -2,6 +2,8 @@ from flask import Flask
 from flask_cors import CORS, cross_origin
 
 from database import db
+
+from api.fcm_bp import fcm_notifications_blueprint
 from routes import notification_blueprint
 from settings import HOST, PORT, SECRET
 
@@ -20,6 +22,7 @@ def create_tables():
 
 # Blueprints
 application.register_blueprint(notification_blueprint)
+application.register_blueprint(fcm_notifications_blueprint, url_prefix="/api/v1/notifications/fcm")
 
 
 #

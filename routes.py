@@ -38,6 +38,22 @@ def error_page_not_found(e):
 # *****************************************************************************
 # Requests:
 # *****************************************************************************
+
+@notification_blueprint.route('/api/v1/applications/register', methods=['POST'])
+@cross_origin()
+def applications_register():
+    request_body = request.get_json()
+    application_id = request_body.get('applicationId')
+    server_key = request_body.get('serverKey')
+
+    application = Application(application_id, server_key)
+    application = application.save()
+
+    if application is None:
+        return jsonify({'message': 'Could not subsribe!'})
+
+    return jsonify(application.json())
+
 @notification_blueprint.route('/api/v1/notifications/web/subscribe', methods=['GET', 'POST'])
 @cross_origin()
 def subscribe():
@@ -57,19 +73,15 @@ def subscribe():
 
     return jsonify(subscription.json())
 
-
 @notification_blueprint.route('/api/v1/notifications/web/unsubscribe', methods=['GET', 'POST'])
 @cross_origin()
 def unsubscribe():
     return jsonify({'id': ''})
 
-
 @notification_blueprint.route('/api/v1/notifications/web/<username>/subscriptions', methods=['GET', 'POST'])
 @cross_origin()
 def get_subscriptions(username):
     return jsonify(WebPushEndpoint.get_endpoints_by_username(username))
-
-
 
 @notification_blueprint.route('/api/v1/notifications/web/push', methods=['POST'])
 @cross_origin()
@@ -106,45 +118,61 @@ def push():
 
     return jsonify(notification)
 
-@notification_blueprint.route('/api/v1/applications/register', methods=['POST'])
-@cross_origin()
-def applications_register():
-    request_body = request.get_json()
-    application_id = request_body.get('applicationId')
-    server_key = request_body.get('serverKey')
+# @notification_blueprint.route('/api/v1/notifications/fcm/subscribe', methods=['GET', 'POST'])
+# @cross_origin()
+# def fcm_subscribe():
+#     if request.method == "GET":
+#         return jsonify({'publicKey': VAPID.get("PUBLIC_KEY")})
 
-    application = Application(application_id, server_key)
-    application = application.save()
+#     request_body = request.get_json()
+#     username = request_body.get('username')
+#     application_id = request_body.get('applicationId')
+#     registration_id = request_body.get('registrationId')
 
-    if application is None:
-        return jsonify({'message': 'Could not subsribe!'})
+#     subscription = FCMPushEndpoint(username, application_id, registration_id, None)
+#     subscription = subscription.save()
 
-    return jsonify(application.json())
+#     if subscription is None:
+#         return jsonify({'message': 'Could not subsribe!'})
 
-@notification_blueprint.route('/api/v1/notifications/fcm/subscribe', methods=['GET', 'POST'])
-@cross_origin()
-def fcm_subscribe():
-    if request.method == "GET":
-        return jsonify({'publicKey': VAPID.get("PUBLIC_KEY")})
+#     return jsonify(subscription.json())
 
-    request_body = request.get_json()
-    username = request_body.get('username')
-    application_id = request_body.get('applicationId')
-    registration_id = request_body.get('registrationId')
+# @notification_blueprint.route('/api/v1/notifications/fcm/<username>/subscriptions', methods=['GET', 'POST'])
+# @cross_origin()
+# def fcm_get_subscriptions(username):
+#     return jsonify(FCMPushEndpoint.get_endpoints_by_username(username))
 
-    subscription = FCMPushEndpoint(username, application_id, registration_id, None)
-    subscription = subscription.save()
+# @notification_blueprint.route('/api/v1/notifications/fcm/push', methods=['POST'])
+# @cross_origin()
+# def fcm_push():
+#     request_body = request.get_json()
 
-    if subscription is None:
-        return jsonify({'message': 'Could not subsribe!'})
+#     username = request_body.get('username')
+#     application_id = request_body.get('applicationId')
+#     notification = request_body.get('notification')
+    
+#     # gets the details needed to send the notification    
+#     application = Application.get_application(application_id)
+   
+#     # store the notification
+#     notification_model = PushNotification(
+#         username=username,
+#         application_id=application_id,
+#         notification=json.dumps(notification)
+#     )
+#     notification_model.save()    
 
-    return jsonify(subscription.json())
+#     # sends the notification to all registered endpoints.
+#     for endpoint in FCMPushEndpoint.get_endpoints_by_username_and_application_id(username, application_id):
+#         data = { 'notification': notification, 'to': endpoint.get('registration_id') }
+#         headers = {'Content-Type': 'application/json', 'Authorization': 'key={}'.format(application.get('server_key'))}
+#         response = requests.post(url='https://fcm.googleapis.com/fcm/send', data=json.dumps(data), headers=headers)
+#         print(data)
+#         print(headers)
+#         print(response.json())
 
-@notification_blueprint.route('/api/v1/notifications/fcm/<username>/subscriptions', methods=['GET', 'POST'])
-@cross_origin()
-def fcm_get_subscriptions(username):
-    return jsonify(FCMPushEndpoint.get_endpoints_by_username(username))
-
+#     # extracting data in json format 
+#     return jsonify({'status': 'success'}) 
 
 @notification_blueprint.route('/api/v1/notifications', methods=['GET'])
 @cross_origin()
@@ -160,38 +188,5 @@ def get_notifications():
 
 
     return jsonify(notifications)
-
-
-@notification_blueprint.route('/api/v1/notifications/fcm/push', methods=['POST'])
-@cross_origin()
-def fcm_push():
-    request_body = request.get_json()
-
-    username = request_body.get('username')
-    application_id = request_body.get('applicationId')
-    notification = request_body.get('notification')
-    
-    # gets the details needed to send the notification    
-    application = Application.get_application(application_id)
-   
-    # store the notification
-    notification_model = PushNotification(
-        username=username,
-        application_id=application_id,
-        notification=json.dumps(notification)
-    )
-    notification_model.save()    
-
-    # sends the notification to all registered endpoints.
-    for endpoint in FCMPushEndpoint.get_endpoints_by_username_and_application_id(username, application_id):
-        data = { 'notification': notification, 'to': endpoint.get('registration_id') }
-        headers = {'Content-Type': 'application/json', 'Authorization': 'key={}'.format(application.get('server_key'))}
-        response = requests.post(url='https://fcm.googleapis.com/fcm/send', data=json.dumps(data), headers=headers)
-        print(data)
-        print(headers)
-        print(response.json())
-
-    # extracting data in json format 
-    return jsonify({'status': 'success'}) 
 
 
